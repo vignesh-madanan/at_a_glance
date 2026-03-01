@@ -42,6 +42,9 @@ if 'sidebar_state' not in st.session_state:
 # Custom CSS for E-ink display optimization
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+    
     .main > div {
         padding-top: 1rem;
         padding-bottom: 1rem;
@@ -60,7 +63,7 @@ st.markdown("""
         color: black;
     }
     
-    /* Header styling */
+    /* Header styling with centered masthead */
     .header-container {
         display: flex;
         justify-content: space-between;
@@ -68,6 +71,34 @@ st.markdown("""
         border-bottom: 3px solid black;
         padding-bottom: 10px;
         margin-bottom: 20px;
+    }
+    
+    .header-center {
+        text-align: center;
+        flex: 1;
+    }
+    
+    .masthead-title {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        font-size: 2rem;
+        font-style: italic;
+        color: #666;
+        letter-spacing: 0.03em;
+        margin: 0 auto;
+        line-height: 1;
+        text-align: center;
+        display: block;
+    }
+    
+    .masthead-subtitle {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        font-size: 0.7rem;
+        font-style: italic;
+        color: #666;
+        margin-top: 3px;
+        letter-spacing: 0.03em;
+        text-align: center;
+        display: block;
     }
     
     .time-display {
@@ -387,7 +418,7 @@ class WeatherService:
 
 
 def render_header():
-    """Render the header with time and weather"""
+    """Render the header with time, masthead, and weather"""
     now = datetime.datetime.now()
     
     weather_service = WeatherService()
@@ -398,6 +429,10 @@ def render_header():
         <div class="time-section">
             <div class="time-display">{now.strftime("%I:%M %p")}</div>
             <div class="date-display">{now.strftime("%A, %B %d, %Y")}</div>
+        </div>
+        <div class="header-center">
+            <h1 class="masthead-title">At a Glance</h1>
+            <div class="masthead-subtitle">"All the Transit That's Fit to this Page"</div>
         </div>
         <div class="weather-display">
             <div class="temperature">{weather_data['emoji']} {weather_data['temperature']}°F</div>
@@ -1144,7 +1179,7 @@ def main():
     
     # Auto-refresh logic (only for dashboard)
     if st.session_state.page == "dashboard":
-        # Render header
+        # Render header with masthead
         render_header()
         
         # Create four columns for train, bus, shuttle, and ferry favorites with better spacing

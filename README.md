@@ -17,7 +17,11 @@ A Streamlit web application designed for 1024x640 E-ink displays showing NYC sub
 make setup
 ```
 
-2. Add API keys to `.streamlit/secrets.toml`:
+2. Set up API keys (optional - app works with mock data):
+```bash
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+```
+   Then edit `secrets.toml` with your keys:
    - Get weather API key from [OpenWeatherMap](https://openweathermap.org/api)
    - Get MTA API key from [MTA Developer Resources](https://api.mta.info/)
 

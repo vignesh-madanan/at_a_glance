@@ -24,5 +24,11 @@
       "location": "",
       "direction": "To Queens"
     }
+  ],
+  "ferry_favorites": [
+    {
+      "location": "Astoria",
+      "route": "AS"
+    }
   ]
 }
