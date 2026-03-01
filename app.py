@@ -6,6 +6,14 @@ import json
 import os
 import pandas as pd
 from typing import Dict, List, Optional
+import pytz
+
+# NYC timezone
+NYC_TZ = pytz.timezone('America/New_York')
+
+def get_nyc_time():
+    """Get current time in NYC timezone"""
+    return datetime.datetime.now(NYC_TZ)
 
 # Import configurations and utilities from services
 from services.config import (
@@ -420,6 +428,140 @@ st.markdown("""
     
     .stDeployButton {display:none;}
     .stDecoration {display:none;}
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .block-container {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        
+        /* Force Streamlit columns to stack vertically on mobile */
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            min-width: 100% !important;
+        }
+        
+        .stHorizontalBlock {
+            flex-wrap: wrap !important;
+        }
+        
+        /* Header stacks vertically on mobile */
+        .header-container {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+        }
+        
+        .time-display {
+            font-size: 1.8rem;
+        }
+        
+        .date-display {
+            font-size: 0.9rem;
+        }
+        
+        .masthead-title {
+            font-size: 1.5rem;
+        }
+        
+        .masthead-subtitle {
+            font-size: 0.6rem;
+        }
+        
+        .weather-display {
+            text-align: center;
+        }
+        
+        .temperature {
+            font-size: 1.5rem;
+        }
+        
+        /* Section headers smaller on mobile */
+        .station-name {
+            font-size: 0.9rem;
+        }
+        
+        /* Compact line rows on mobile */
+        .line-container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 8px;
+        }
+        
+        .line-header {
+            min-width: auto;
+            width: 100%;
+        }
+        
+        .line-badge {
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+        }
+        
+        .bus-badge, .shuttle-badge, .ferry-badge {
+            width: 36px;
+            height: 36px;
+            font-size: 0.7rem;
+        }
+        
+        .direction-text {
+            font-size: 0.8rem;
+        }
+        
+        /* Arrivals wrap and stay readable */
+        .arrivals-container {
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 8px;
+        }
+        
+        .arrival-time {
+            min-width: 70px;
+        }
+        
+        .arrival-countdown {
+            font-size: 1.3rem;
+        }
+        
+        .arrival-eta {
+            font-size: 0.75rem;
+        }
+        
+        /* Section padding reduced */
+        .favorites-section,
+        .bus-favorites-section,
+        .shuttle-favorites-section,
+        .ferry-favorites-section {
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+    }
+    
+    /* Extra small screens */
+    @media (max-width: 480px) {
+        .time-display {
+            font-size: 1.5rem;
+        }
+        
+        .masthead-title {
+            font-size: 1.2rem;
+        }
+        
+        .line-badge {
+            width: 32px;
+            height: 32px;
+            font-size: 1rem;
+        }
+        
+        .arrival-countdown {
+            font-size: 1.1rem;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -478,7 +620,7 @@ class WeatherService:
 
 def render_header():
     """Render the header with time, masthead, and weather"""
-    now = datetime.datetime.now()
+    now = get_nyc_time()
     
     weather_service = WeatherService()
     weather_data = weather_service.get_weather()
@@ -520,7 +662,7 @@ def render_subway_line_with_station(station: str, line: str, direction: str, arr
     """Render a single subway line with arrivals and station name"""
     # Generate arrival times with ETA and train details
     arrivals_with_details = []
-    current_time = datetime.datetime.now()
+    current_time = get_nyc_time()
     
     # Define final stations for each line and direction
     final_stations = {
@@ -594,7 +736,7 @@ def render_subway_line_with_station(station: str, line: str, direction: str, arr
 def render_bus_line(bus: str, location: str, direction: str, arrivals: List[str]):
     """Render a single bus line with arrivals and location"""
     arrivals_with_eta = []
-    current_time = datetime.datetime.now()
+    current_time = get_nyc_time()
     
     for arrival_text in arrivals:
         eta_text = ""
@@ -667,7 +809,7 @@ def render_shuttle_line(location: str, arrivals: List[str]):
     """Render a single shuttle line with arrivals and location"""
     # Generate arrival times with ETA
     arrivals_with_eta = []
-    current_time = datetime.datetime.now()
+    current_time = get_nyc_time()
     
     for arrival_text in arrivals:
         eta_text = ""
@@ -732,7 +874,7 @@ def render_shuttle_favorites_section():
 def render_ferry_line(location: str, arrivals: List[str], route_info: Optional[List[dict]] = None):
     """Render a single ferry line with arrivals and location"""
     arrivals_with_eta = []
-    current_time = datetime.datetime.now()
+    current_time = get_nyc_time()
     
     for i, arrival_text in enumerate(arrivals):
         eta_text = ""
@@ -1220,7 +1362,7 @@ def main():
             render_ferry_favorites_section()
         
         # Bottom controls section
-        last_updated = datetime.datetime.now().strftime("%I:%M %p")
+        last_updated = get_nyc_time().strftime("%I:%M %p")
         
         st.markdown(f'''
         <div class="bottom-controls">
