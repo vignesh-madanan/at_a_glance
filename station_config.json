@@ -1,0 +1,28 @@
+{
+  "train_favorites": [
+    {
+      "station": "30 Av",
+      "line": "N",
+      "direction": "Manhattan",
+      "css_class": "line-n-q-r-w"
+    },
+    {
+      "station": "30 Av",
+      "line": "W",
+      "direction": "Manhattan",
+      "css_class": "line-n-q-r-w"
+    }
+  ],
+  "bus_favorites": [
+    {
+      "bus": "Q18",
+      "location": "27th Ave",
+      "direction": "To Brooklyn"
+    },
+    {
+      "bus": "B62",
+      "location": "",
+      "direction": "To Queens"
+    }
+  ]
+}
