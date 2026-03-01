@@ -129,44 +129,58 @@ st.markdown("""
         margin-top: 5px;
     }
     
-    /* Subway styling */
+    /* Section header styling */
     .station-name {
-        font-size: 1.4rem;
+        font-size: 1rem;
         font-weight: bold;
         text-align: left;
         color: black;
-        border-bottom: 3px solid black;
-        padding-bottom: 8px;
-        margin-bottom: 12px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 6px;
+        margin-bottom: 8px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
     
+    /* Compact row layout - reduced whitespace */
     .line-container {
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        padding: 10px;
-        background-color: #f9f9f9;
+        margin-bottom: 8px;
+        border: none;
+        border-left: 4px solid #ccc;
+        padding: 6px 10px;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
+    
+    .line-container.train-row { border-left-color: #00933c; background-color: rgba(0, 147, 60, 0.05); }
+    .line-container.bus-row { border-left-color: #ff6319; background-color: rgba(255, 99, 25, 0.05); }
+    .line-container.shuttle-row { border-left-color: #9c27b0; background-color: rgba(156, 39, 176, 0.05); }
+    .line-container.ferry-row { border-left-color: #00839C; background-color: rgba(0, 131, 156, 0.05); }
     
     .line-header {
         display: flex;
         align-items: center;
-        margin-bottom: 8px;
+        min-width: 180px;
+        flex-shrink: 0;
     }
     
+    /* Larger, bolder route badges */
     .line-badge {
-        width: 35px;
-        height: 35px;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
+        font-weight: 900;
         color: white;
-        margin-right: 10px;
-        font-size: 1.2rem;
+        margin-right: 8px;
+        font-size: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        flex-shrink: 0;
     }
     
     .line-4-5-6 { 
@@ -211,129 +225,174 @@ st.markdown("""
     }
     
     .direction-text {
-        font-size: 1.1rem;
-        font-weight: bold;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #333;
+        line-height: 1.2;
+    }
+    
+    .direction-text strong {
         color: black;
     }
     
-    /* Section styling */
+    /* Section styling - compact with distinct colors */
     .favorites-section {
         background-color: white;
         border: none;
-        border-top: 3px solid #00933c;
+        border-top: 4px solid #00933c;
         border-radius: 0;
-        padding: 15px;
-        margin-bottom: 20px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
         margin-left: 0;
         margin-right: 0;
-        min-height: 80px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .bus-favorites-section {
         background-color: white;
         border: none;
-        border-top: 3px solid #ff6319;
+        border-top: 4px solid #ff6319;
         border-radius: 0;
-        padding: 15px;
-        margin-bottom: 20px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
         margin-left: 0;
         margin-right: 0;
-        min-height: 80px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .shuttle-favorites-section {
         background-color: white;
         border: none;
-        border-top: 3px solid #9c27b0;
+        border-top: 4px solid #9c27b0;
         border-radius: 0;
-        padding: 15px;
-        margin-bottom: 20px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
         margin-left: 0;
         margin-right: 0;
-        min-height: 80px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .ferry-favorites-section {
         background-color: white;
         border: none;
-        border-top: 3px solid #00839C;
+        border-top: 4px solid #00839C;
         border-radius: 0;
-        padding: 15px;
-        margin-bottom: 20px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
         margin-left: 0;
         margin-right: 0;
-        min-height: 80px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .ferry-badge {
-        width: 45px;
-        height: 35px;
+        width: 42px;
+        height: 42px;
         border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
+        font-weight: 900;
         color: white;
-        margin-right: 10px;
-        font-size: 0.8rem;
+        margin-right: 8px;
+        font-size: 0.75rem;
         background-color: #00839C;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        flex-shrink: 0;
     }
     
     .bus-badge {
-        width: 45px;
-        height: 35px;
+        width: 42px;
+        height: 42px;
         border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
+        font-weight: 900;
         color: white;
-        margin-right: 10px;
-        font-size: 1rem;
+        margin-right: 8px;
+        font-size: 1.3rem;
         background-color: #ff6319;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        flex-shrink: 0;
     }
     
     .shuttle-badge {
-        width: 45px;
-        height: 35px;
+        width: 42px;
+        height: 42px;
         border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
+        font-weight: 900;
         color: white;
-        margin-right: 10px;
-        font-size: 0.8rem;
+        margin-right: 8px;
+        font-size: 0.85rem;
         background-color: #9c27b0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        flex-shrink: 0;
     }
     
     .arrivals-container {
         display: flex;
-        gap: 8px;
-        margin-left: 45px;
-        flex-wrap: wrap;
+        gap: 6px;
+        margin-left: 0;
+        flex-wrap: nowrap;
         justify-content: flex-start;
+        flex: 1;
     }
     
+    /* Primary arrival time - large countdown */
     .arrival-time {
-        font-size: 0.8rem;
-        padding: 4px 6px;
-        border: 1px solid black;
-        background-color: white;
+        padding: 4px 8px;
+        border: none;
+        background-color: transparent;
         color: black;
-        font-weight: bold;
         text-align: center;
-        min-height: 30px;
-        min-width: 50px;
+        min-width: 80px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        flex: 1;
+    }
+    
+    .arrival-countdown {
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: black;
+        line-height: 1;
+    }
+    
+    .arrival-eta {
+        font-size: 0.85rem;
+        color: #333;
+        font-weight: 600;
+        margin-top: 3px;
+    }
+    
+    .arrival-dest {
+        font-size: 0.6rem;
+        color: #888;
+        font-weight: normal;
+    }
+    
+    /* Status badges */
+    .status-badge {
+        font-size: 0.6rem;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-weight: bold;
+        margin-top: 2px;
+    }
+    
+    .status-ontime {
+        background-color: #4CAF50;
+        color: white;
+    }
+    
+    .status-delayed {
+        background-color: #f44336;
+        color: white;
+    }
+    
+    .status-arriving {
+        background-color: #2196F3;
+        color: white;
     }
     
     .last-updated {
@@ -465,81 +524,35 @@ def render_subway_line_with_station(station: str, line: str, direction: str, arr
     
     # Define final stations for each line and direction
     final_stations = {
-        "4": {
-            "Downtown": "Utica Av",
-            "Uptown": "Woodlawn",
-            "Downtown & Brooklyn": "Utica Av",
-            "Uptown & Bronx": "Woodlawn"
-        },
-        "5": {
-            "Downtown": "Flatbush Av",
-            "Uptown": "Dyre Av",
-            "Downtown & Brooklyn": "Flatbush Av",
-            "Uptown & Bronx": "Dyre Av"
-        },
-        "6": {
-            "Downtown": "Brooklyn Bridge",
-            "Uptown": "Pelham Bay Park",
-            "Downtown & Brooklyn": "Brooklyn Bridge",
-            "Uptown & Bronx": "Pelham Bay Park"
-        },
-        "N": {
-            "Downtown": "Coney Island",
-            "Uptown": "Astoria",
-            "Downtown & Brooklyn": "Coney Island",
-            "Uptown & Manhattan": "Astoria"
-        },
-        "Q": {
-            "Downtown": "Coney Island",
-            "Uptown": "96 St",
-            "Downtown & Brooklyn": "Coney Island",
-            "Uptown & Manhattan": "96 St"
-        },
-        "R": {
-            "Downtown": "Bay Ridge",
-            "Uptown": "Forest Hills",
-            "Downtown & Brooklyn": "Bay Ridge",
-            "Uptown & Manhattan": "Forest Hills"
-        },
-        "W": {
-            "Downtown": "Whitehall",
-            "Uptown": "Astoria",
-            "Downtown & Brooklyn": "Whitehall",
-            "Uptown & Manhattan": "Astoria"
-        },
-        "L": {
-            "Brooklyn": "Canarsie",
-            "Manhattan": "8 Av"
-        },
-        "1": {
-            "Downtown": "South Ferry",
-            "Uptown": "Van Cortlandt Park",
-            "Downtown & Brooklyn": "South Ferry",
-            "Uptown & Bronx": "Van Cortlandt Park"
-        },
-        "2": {
-            "Downtown": "Flatbush Av",
-            "Uptown": "Wakefield",
-            "Downtown & Brooklyn": "Flatbush Av",
-            "Uptown & Bronx": "Wakefield"
-        },
-        "3": {
-            "Downtown": "New Lots Av",
-            "Uptown": "Harlem",
-            "Downtown & Brooklyn": "New Lots Av",
-            "Uptown & Bronx": "Harlem"
-        }
+        "4": {"Downtown": "Utica Av", "Uptown": "Woodlawn", "Downtown & Brooklyn": "Utica Av", "Uptown & Bronx": "Woodlawn"},
+        "5": {"Downtown": "Flatbush Av", "Uptown": "Dyre Av", "Downtown & Brooklyn": "Flatbush Av", "Uptown & Bronx": "Dyre Av"},
+        "6": {"Downtown": "Brooklyn Bridge", "Uptown": "Pelham Bay Park", "Downtown & Brooklyn": "Brooklyn Bridge", "Uptown & Bronx": "Pelham Bay Park"},
+        "N": {"Downtown": "Coney Island", "Uptown": "Astoria", "Downtown & Brooklyn": "Coney Island", "Uptown & Manhattan": "Astoria"},
+        "Q": {"Downtown": "Coney Island", "Uptown": "96 St", "Downtown & Brooklyn": "Coney Island", "Uptown & Manhattan": "96 St"},
+        "R": {"Downtown": "Bay Ridge", "Uptown": "Forest Hills", "Downtown & Brooklyn": "Bay Ridge", "Uptown & Manhattan": "Forest Hills"},
+        "W": {"Downtown": "Whitehall", "Uptown": "Astoria", "Downtown & Brooklyn": "Whitehall", "Uptown & Manhattan": "Astoria"},
+        "L": {"Brooklyn": "Canarsie", "Manhattan": "8 Av"},
+        "1": {"Downtown": "South Ferry", "Uptown": "Van Cortlandt Park", "Downtown & Brooklyn": "South Ferry", "Uptown & Bronx": "Van Cortlandt Park"},
+        "2": {"Downtown": "Flatbush Av", "Uptown": "Wakefield", "Downtown & Brooklyn": "Flatbush Av", "Uptown & Bronx": "Wakefield"},
+        "3": {"Downtown": "New Lots Av", "Uptown": "Harlem", "Downtown & Brooklyn": "New Lots Av", "Uptown & Bronx": "Harlem"}
     }
     
     final_station = final_stations.get(line, {}).get(direction, "Terminal")
     
     for arrival_text in arrivals:
         eta_text = ""
+        status_class = "status-ontime"
+        status_text = "On Time"
+        
         if arrival_text == "Arriving":
             eta_text = current_time.strftime("%I:%M %p")
+            status_class = "status-arriving"
+            status_text = "Arriving"
         elif arrival_text == "< 1 min":
             eta_time = current_time + datetime.timedelta(minutes=1)
             eta_text = eta_time.strftime("%I:%M %p")
+            status_class = "status-arriving"
+            status_text = "< 1 min"
         elif arrival_text.endswith(" min"):
             try:
                 minutes = int(arrival_text.split()[0])
@@ -547,27 +560,30 @@ def render_subway_line_with_station(station: str, line: str, direction: str, arr
                 eta_text = eta_time.strftime("%I:%M %p")
             except:
                 eta_text = "--"
+        elif arrival_text == "--":
+            eta_text = "--"
+            status_class = ""
+            status_text = ""
         else:
             eta_text = "--"
         
-        arrivals_with_details.append((arrival_text, eta_text, final_station))
+        arrivals_with_details.append((arrival_text, eta_text, final_station, status_class, status_text))
     
-    arrivals_html = "".join([
-        f'''<div class="arrival-time">
-            {time}<br>
-            <small style="font-size: 0.7rem; color: #888;">{eta}</small><br>
-            <small style="font-size: 0.6rem; color: #666; font-weight: normal;">
-                {line} {direction}<br>to {final_station}
-            </small>
-        </div>''' 
-        for time, eta, final_station in arrivals_with_details
-    ])
+    # Build HTML with large countdown and small ETA
+    arrivals_html_parts = []
+    for time, eta, final_station, status_class, status_text in arrivals_with_details:
+        arrivals_html_parts.append(f'''<div class="arrival-time">
+            <span class="arrival-countdown">{time}</span>
+            <span class="arrival-eta">{eta}</span>
+        </div>''')
+    
+    arrivals_html = "".join(arrivals_html_parts)
     
     st.markdown(f"""
-    <div class="line-container">
+    <div class="line-container train-row">
         <div class="line-header">
             <div class="line-badge {line_class}">{line}</div>
-            <div class="direction-text">{line} to {direction} FROM <strong>{station}</strong></div>
+            <div class="direction-text">{line} to {direction}<br><strong>{station}</strong></div>
         </div>
         <div class="arrivals-container">
             {arrivals_html}
@@ -577,7 +593,6 @@ def render_subway_line_with_station(station: str, line: str, direction: str, arr
 
 def render_bus_line(bus: str, location: str, direction: str, arrivals: List[str]):
     """Render a single bus line with arrivals and location"""
-    # Generate arrival times with ETA
     arrivals_with_eta = []
     current_time = datetime.datetime.now()
     
@@ -601,15 +616,18 @@ def render_bus_line(bus: str, location: str, direction: str, arrivals: List[str]
         arrivals_with_eta.append((arrival_text, eta_text))
     
     arrivals_html = "".join([
-        f'<div class="arrival-time">{time}<br><small style="font-size: 0.7rem; color: #888;">{eta}</small></div>' 
+        f'''<div class="arrival-time">
+            <span class="arrival-countdown">{time}</span>
+            <span class="arrival-eta">{eta}</span>
+        </div>''' 
         for time, eta in arrivals_with_eta
     ])
     
     st.markdown(f"""
-    <div class="line-container">
+    <div class="line-container bus-row">
         <div class="line-header">
             <div class="bus-badge">{bus}</div>
-            <div class="direction-text">{bus} {direction} from <strong>{location}</strong></div>
+            <div class="direction-text">{bus} {direction}<br><strong>{location}</strong></div>
         </div>
         <div class="arrivals-container">
             {arrivals_html}
@@ -676,15 +694,18 @@ def render_shuttle_line(location: str, arrivals: List[str]):
         arrivals_with_eta.append((arrival_text, eta_text))
     
     arrivals_html = "".join([
-        f'<div class="arrival-time">{time}<br><small style="font-size: 0.7rem; color: #888;">{eta}</small></div>' 
+        f'''<div class="arrival-time">
+            <span class="arrival-countdown">{time}</span>
+            <span class="arrival-eta">{eta}</span>
+        </div>''' 
         for time, eta in arrivals_with_eta
     ])
     
     st.markdown(f"""
-    <div class="line-container">
+    <div class="line-container shuttle-row">
         <div class="line-header">
             <div class="shuttle-badge">HP</div>
-            <div class="direction-text">HP SHUTTLE from <strong>{location}</strong></div>
+            <div class="direction-text">HP Shuttle<br><strong>{location}</strong></div>
         </div>
         <div class="arrivals-container">
             {arrivals_html}
@@ -742,25 +763,23 @@ def render_ferry_line(location: str, arrivals: List[str], route_info: Optional[L
         
         arrivals_with_eta.append((arrival_text, eta_text, route_name, headsign))
     
-    # Build HTML for each arrival
+    # Build HTML for each arrival with large countdown
     arrivals_html_parts = []
     for time, eta, route_name, headsign in arrivals_with_eta:
-        headsign_html = ""
-        if headsign and time != "--":
-            headsign_html = f'<br><small style="font-size: 0.6rem; color: #666; font-weight: normal;">to {headsign}</small>'
+        headsign_html = f'<span class="arrival-dest">to {headsign}</span>' if headsign and time != "--" else ""
         
         arrivals_html_parts.append(f'''<div class="arrival-time">
-            {time}<br>
-            <small style="font-size: 0.7rem; color: #888;">{eta}</small>{headsign_html}
+            <span class="arrival-countdown">{time}</span>
+            <span class="arrival-eta">{eta}</span>{headsign_html}
         </div>''')
     
     arrivals_html = "".join(arrivals_html_parts)
     
     st.markdown(f"""
-    <div class="line-container">
+    <div class="line-container ferry-row">
         <div class="line-header">
             <div class="ferry-badge">⛴️</div>
-            <div class="direction-text">NYC FERRY from <strong>{location}</strong></div>
+            <div class="direction-text">NYC Ferry<br><strong>{location}</strong></div>
         </div>
         <div class="arrivals-container">
             {arrivals_html}
@@ -1182,19 +1201,22 @@ def main():
         # Render header with masthead
         render_header()
         
-        # Create four columns for train, bus, shuttle, and ferry favorites with better spacing
-        col1, col2, col3, col4 = st.columns([1, 1, 1, 1], gap="large")
+        # Top row: Favorite Trains and HP Shuttle
+        top_col1, top_col2 = st.columns([1, 1], gap="large")
         
-        with col1:
+        with top_col1:
             render_train_favorites_section()
             
-        with col2:
-            render_bus_favorites_section()
-            
-        with col3:
+        with top_col2:
             render_shuttle_favorites_section()
         
-        with col4:
+        # Bottom row: Favorite Buses and NYC Ferry
+        bottom_col1, bottom_col2 = st.columns([1, 1], gap="large")
+        
+        with bottom_col1:
+            render_bus_favorites_section()
+        
+        with bottom_col2:
             render_ferry_favorites_section()
         
         # Bottom controls section

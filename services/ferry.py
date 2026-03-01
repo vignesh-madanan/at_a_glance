@@ -4,7 +4,11 @@ import os
 import io
 import zipfile
 from typing import Dict, List, Optional
+from zoneinfo import ZoneInfo
 import requests
+
+# NYC timezone for ferry schedules
+NYC_TZ = ZoneInfo("America/New_York")
 
 # NYC Ferry GTFS API endpoints
 GTFS_URL = "https://nycferry.connexionz.net/rtt/public/utility/gtfs.aspx"
@@ -299,7 +303,7 @@ class FerryService:
         if not stop_id:
             return ["--"] * count
         
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(NYC_TZ)
         current_date = now.date()
         current_minutes = now.hour * 60 + now.minute
         
@@ -373,7 +377,7 @@ class FerryService:
         if not stop_id:
             return []
         
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(NYC_TZ)
         current_date = now.date()
         current_minutes = now.hour * 60 + now.minute
         
