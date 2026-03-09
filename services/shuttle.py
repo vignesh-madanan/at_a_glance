@@ -1,18 +1,21 @@
 import datetime
+import pytz
 from typing import Dict, List
 from .config import SHUTTLE_TIMING
+
+NYC_TZ = pytz.timezone('America/New_York')
 
 
 class ShuttleService:
     def __init__(self):
         pass
-        
+
     def get_next_shuttle_times(self, location: str) -> List[str]:
         """Get the next 3 shuttle times for the specified location"""
         if location not in SHUTTLE_TIMING:
             return ["--", "--", "--"]
-            
-        current_time = datetime.datetime.now()
+
+        current_time = datetime.datetime.now(NYC_TZ)
         shuttle_times = SHUTTLE_TIMING[location]
         next_times = []
         
