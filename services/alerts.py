@@ -1,5 +1,4 @@
 import requests
-import streamlit as st
 from typing import List, Optional
 
 MTA_ALERTS_URL = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fall-alerts"
@@ -14,10 +13,6 @@ class AlertsService:
             header, description, effect, routes
         Returns [] on missing API key, network error, or parse failure.
         """
-        api_key = st.secrets.get("mta_api_key", "")
-        if not api_key or api_key == "YOUR_MTA_API_KEY":
-            return []
-
         try:
             from google.transit import gtfs_realtime_pb2
         except ImportError:
@@ -26,7 +21,6 @@ class AlertsService:
         try:
             response = requests.get(
                 MTA_ALERTS_URL,
-                headers={"x-api-key": api_key},
                 timeout=5,
             )
             response.raise_for_status()
