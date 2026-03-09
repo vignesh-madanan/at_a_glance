@@ -25,6 +25,7 @@ from services.train import SubwayService
 from services.bus import BusService
 from services.shuttle import ShuttleService
 from services.ferry import FerryService
+from services.alerts import AlertsService
 
 
 
@@ -988,6 +989,37 @@ def render_bus_favorites_section():
     st.markdown('</div>', unsafe_allow_html=True)
 
 
+def render_alerts_section():
+    """Render MTA service alerts below the header, filtered to configured favorites."""
+    config = load_station_config()
+
+    # Collect route IDs from configured favorites
+    favorite_routes = []
+    for fav in config.get("trains", []):
+        line = fav.get("line", "")
+        if line:
+            favorite_routes.append(line)
+    for fav in config.get("buses", []):
+        bus = fav.get("bus", "")
+        if bus:
+            favorite_routes.append(bus)
+
+    alerts = AlertsService().get_service_alerts(routes=favorite_routes if favorite_routes else None)
+
+    for alert in alerts:
+        routes_label = ", ".join(alert["routes"]) if alert["routes"] else "All Lines"
+        header = alert["header"] or alert["effect"] or "Service Alert"
+        description = alert["description"]
+        message = f"**[{routes_label}]** {header}"
+        if description and description != header:
+            # Truncate long descriptions to keep the section compact
+            desc_short = description[:160].rstrip()
+            if len(description) > 160:
+                desc_short += "…"
+            message += f" — {desc_short}"
+        st.warning(message)
+
+
 def render_admin_page():
     """Render the admin configuration page"""
     st.title("🔧 Station Configuration")
@@ -1342,7 +1374,10 @@ def main():
     if st.session_state.page == "dashboard":
         # Render header with masthead
         render_header()
-        
+
+        # Service alerts (shows nothing if no active alerts or no API key)
+        render_alerts_section()
+
         # Top row: Favorite Trains and HP Shuttle
         top_col1, top_col2 = st.columns([1, 1], gap="large")
         
