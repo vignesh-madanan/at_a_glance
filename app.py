@@ -26,6 +26,7 @@ from services.bus import BusService
 from services.shuttle import ShuttleService
 from services.ferry import FerryService
 from services.alerts import AlertsService
+from services.langgraph_agent import chat as agent_chat
 
 
 
@@ -1020,6 +1021,59 @@ def render_alerts_section():
         st.warning(message)
 
 
+def render_navigator_page():
+    """Render the NYC Transit Navigator chat page."""
+    st.title("🗺️ NYC Transit Navigator")
+    st.caption("Ask me anything about getting around NYC — subway, bus, or ferry.")
+
+    # Initialize chat history in session state
+    if "navigator_history" not in st.session_state:
+        st.session_state.navigator_history = []
+
+    # Display chat messages
+    for msg in st.session_state.navigator_history:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    # Suggested starter questions (only shown when history is empty)
+    if not st.session_state.navigator_history:
+        st.markdown("**Try asking:**")
+        starters = [
+            "How do I get from Union Square to JFK?",
+            "What's the fastest way to get to Williamsburg from Midtown?",
+            "Are there any delays on the L train right now?",
+            "What time is the next ferry from Wall St/Pier 11?",
+            "How much does a 30-day MetroCard cost?",
+        ]
+        cols = st.columns(2)
+        for i, q in enumerate(starters):
+            if cols[i % 2].button(q, key=f"starter_{i}"):
+                # Treat starter click as a user message
+                st.session_state.navigator_history.append({"role": "user", "content": q})
+                with st.spinner("Thinking…"):
+                    reply = agent_chat(st.session_state.navigator_history[:-1], q)
+                st.session_state.navigator_history.append({"role": "assistant", "content": reply})
+                st.rerun()
+
+    # Chat input at the bottom
+    user_input = st.chat_input("Ask about subway, bus, ferry, routes, fares…")
+    if user_input:
+        st.session_state.navigator_history.append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.markdown(user_input)
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking…"):
+                reply = agent_chat(st.session_state.navigator_history[:-1], user_input)
+            st.markdown(reply)
+        st.session_state.navigator_history.append({"role": "assistant", "content": reply})
+
+    # Clear chat button
+    if st.session_state.navigator_history:
+        if st.button("🗑️ Clear conversation", key="clear_chat"):
+            st.session_state.navigator_history = []
+            st.rerun()
+
+
 def render_admin_page():
     """Render the admin configuration page"""
     st.title("🔧 Station Configuration")
@@ -1344,31 +1398,55 @@ def render_admin_page():
         st.session_state.page = "dashboard"
         st.rerun()
 
+def _render_sidebar():
+    """Render the persistent left navigation sidebar."""
+    with st.sidebar:
+        st.markdown("## 🚇 At a Glance")
+        st.divider()
+
+        def nav_button(label: str, page: str):
+            is_active = st.session_state.get("page") == page
+            btn_type = "primary" if is_active else "secondary"
+            if st.button(label, key=f"nav_{page}", use_container_width=True, type=btn_type):
+                st.session_state.page = page
+                st.rerun()
+
+        nav_button("🏠  Dashboard", "dashboard")
+        nav_button("🗺️  NYC Navigator", "navigator")
+        nav_button("⚙️  Settings", "admin")
+
+        st.divider()
+
+        # Auto-refresh control (only relevant on dashboard)
+        if st.session_state.get("page") == "dashboard":
+            st.subheader("Auto-refresh")
+            auto_refresh = st.checkbox("Enable auto-refresh", value=True, key="auto_refresh_chk")
+            st.caption("Refresh interval: 30 seconds")
+            return auto_refresh
+
+        return False
+
+
 def main():
     """Main application function"""
     # Initialize page state
     if 'page' not in st.session_state:
         st.session_state.page = "dashboard"
-    
-    # Page navigation
-    if st.session_state.page == "admin":
-        render_admin_page()
-        return
-    
-    # Main dashboard page
-    # Check for admin page navigation from settings
+
+    # Check for admin page navigation from query params
     if st.query_params.get("page") == "admin":
         st.session_state.page = "admin"
         st.rerun()
-    
-    # Admin button in sidebar (minimal)
-    with st.sidebar:
-        st.title("Settings")
-        
-        # Refresh controls
-        st.subheader("Auto-refresh")
-        auto_refresh = st.checkbox("Enable auto-refresh", value=True)
-        st.write("Refresh interval: 30 seconds")
+
+    auto_refresh = _render_sidebar()
+
+    if st.session_state.page == "admin":
+        render_admin_page()
+        return
+
+    if st.session_state.page == "navigator":
+        render_navigator_page()
+        return
     
     # Auto-refresh logic (only for dashboard)
     if st.session_state.page == "dashboard":
@@ -1404,13 +1482,6 @@ def main():
             <div class="last-updated">Last updated: {last_updated}</div>
         </div>
         ''', unsafe_allow_html=True)
-        
-        # Settings button on the right
-        col1, col2, col3 = st.columns([2, 1, 1])
-        with col3:
-            if st.button("⚙️ Settings", key="admin_settings", help="Configure favorites", type="secondary"):
-                st.session_state.page = "admin"
-                st.rerun()
         
         # Auto-refresh mechanism - 30 second intervals
         if auto_refresh:
