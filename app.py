@@ -26,7 +26,11 @@ from services.bus import BusService
 from services.shuttle import ShuttleService
 from services.ferry import FerryService
 from services.alerts import AlertsService
-from services.langgraph_agent import chat as agent_chat
+try:
+    from services.langgraph_agent import chat as agent_chat
+except ImportError:
+    def agent_chat(history, user_message):  # type: ignore[misc]
+        return "The AI navigator is unavailable. Required packages failed to install."
 
 
 
