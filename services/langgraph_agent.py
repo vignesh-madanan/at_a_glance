@@ -12,12 +12,20 @@ from typing import Annotated, Sequence
 from datetime import datetime, timezone
 import pytz
 
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
-from langchain_core.tools import tool
-from langchain_anthropic import ChatAnthropic
-from langgraph.graph import StateGraph, END
-from langgraph.graph.message import add_messages
-from langgraph.prebuilt import ToolNode, tools_condition
+try:
+    from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
+    from langchain_core.tools import tool
+    from langchain_anthropic import ChatAnthropic
+    from langgraph.graph import StateGraph, END
+    from langgraph.graph.message import add_messages
+    from langgraph.prebuilt import ToolNode, tools_condition
+    _LANGCHAIN_AVAILABLE = True
+except ImportError as _e:
+    _LANGCHAIN_AVAILABLE = False
+    _IMPORT_ERROR = str(_e)
+    # Stub so @tool-decorated functions can still be defined without crashing
+    def tool(fn):  # type: ignore[misc]
+        return fn
 from typing_extensions import TypedDict
 
 # ---------------------------------------------------------------------------
@@ -194,11 +202,12 @@ Use NYC transit terminology (e.g. "uptown", "downtown", "local", "express").
 """
 
 
-class AgentState(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], add_messages]
+if _LANGCHAIN_AVAILABLE:
+    class AgentState(TypedDict):
+        messages: Annotated[Sequence[BaseMessage], add_messages]
 
 
-def _build_graph() -> StateGraph:
+def _build_graph():
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     llm = ChatAnthropic(
         model="claude-sonnet-4-6",
@@ -245,6 +254,13 @@ def chat(history: list[dict], user_message: str) -> str:
     user_message: the new user message
     Returns: assistant reply string
     """
+    if not _LANGCHAIN_AVAILABLE:
+        return (
+            "The AI navigator is temporarily unavailable because required packages "
+            f"could not be loaded ({_IMPORT_ERROR}). "
+            "Please check the deployment logs."
+        )
+
     messages: list[BaseMessage] = []
     for m in history:
         if m["role"] == "user":
