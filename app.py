@@ -26,7 +26,11 @@ from services.bus import BusService
 from services.shuttle import ShuttleService
 from services.ferry import FerryService
 from services.alerts import AlertsService
-from services.langgraph_agent import chat as agent_chat
+try:
+    from services.langgraph_agent import chat as agent_chat
+except Exception as _agent_import_err:
+    def agent_chat(history, message):
+        return f"AI assistant unavailable (missing dependencies: {_agent_import_err}). Please check that langchain-core, langchain-anthropic, and langgraph are installed."
 
 
 
