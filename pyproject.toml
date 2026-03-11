@@ -7,3 +7,14 @@ requires-python = ">=3.9"
 dependencies = [
     "pandas>=2.3.3",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=services --cov-report=term-missing --cov-report=html"
+
+[tool.coverage.run]
+source = ["services"]
+omit = ["services/langgraph_agent.py"]
+
+[tool.coverage.report]
+show_missing = true
