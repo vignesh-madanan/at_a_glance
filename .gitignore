@@ -16,3 +16,7 @@ wheels/
 .env
 .env.*
 *.env
+
+# Test coverage artifacts
+.coverage
+htmlcov/
