@@ -1,7 +1,7 @@
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 import requests
 import datetime
-import time
 import json
 import os
 import pandas as pd
@@ -60,12 +60,12 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
     
     .main > div {
-        padding-top: 1rem;
+        padding-top: 2rem;
         padding-bottom: 1rem;
     }
     
     .block-container {
-        padding-top: 1rem;
+        padding-top: 2rem;
         padding-bottom: 1rem;
         max-width: none;
         padding-left: 2rem;
@@ -418,6 +418,34 @@ st.markdown("""
         align-items: center;
     }
     
+    /* Compact alerts section */
+    .alerts-container {
+        background-color: #fff8e1;
+        border-left: 3px solid #f9a825;
+        padding: 8px 12px;
+        margin-bottom: 15px;
+        font-size: 0.75rem;
+        line-height: 1.4;
+        color: #5d4037;
+    }
+    
+    .alerts-container .alert-item {
+        margin-bottom: 4px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(249, 168, 37, 0.3);
+    }
+    
+    .alerts-container .alert-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .alerts-container .alert-route {
+        font-weight: bold;
+        color: #e65100;
+    }
+    
     .bottom-controls {
         display: flex;
         justify-content: space-between;
@@ -430,7 +458,6 @@ st.markdown("""
     /* Hide Streamlit elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
     
     .stDeployButton {display:none;}
     .stDecoration {display:none;}
@@ -1011,18 +1038,32 @@ def render_alerts_section():
 
     alerts = AlertsService().get_service_alerts(routes=favorite_routes if favorite_routes else None)
 
+    if not alerts:
+        return
+    
+    # Build consolidated alerts HTML
+    alert_items = []
     for alert in alerts:
         routes_label = ", ".join(alert["routes"]) if alert["routes"] else "All Lines"
         header = alert["header"] or alert["effect"] or "Service Alert"
         description = alert["description"]
-        message = f"**[{routes_label}]** {header}"
+        
+        # Build compact message with truncated description
+        message = header
         if description and description != header:
-            # Truncate long descriptions to keep the section compact
-            desc_short = description[:160].rstrip()
-            if len(description) > 160:
+            desc_short = description[:120].rstrip()
+            if len(description) > 120:
                 desc_short += "…"
             message += f" — {desc_short}"
-        st.warning(message)
+        
+        alert_items.append(f'<div class="alert-item"><span class="alert-route">[{routes_label}]</span> {message}</div>')
+    
+    alerts_html = "\n".join(alert_items)
+    st.markdown(f'''
+    <div class="alerts-container">
+        {alerts_html}
+    </div>
+    ''', unsafe_allow_html=True)
 
 
 def render_navigator_page():
@@ -1487,10 +1528,9 @@ def main():
         </div>
         ''', unsafe_allow_html=True)
         
-        # Auto-refresh mechanism - 30 second intervals
+        # Auto-refresh mechanism - 30 second intervals (non-blocking)
         if auto_refresh:
-            time.sleep(30)
-            st.rerun()
+            st_autorefresh(interval=30000, key="dashboard_refresh")
 
 if __name__ == "__main__":
     main()
